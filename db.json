@@ -1,0 +1,192 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "mandate": "loan",
+      "authcode": "123",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 2,
+      "mandate": "loan",
+      "authcode": "124",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 3,
+      "mandate": "loan",
+      "authcode": "125",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 4,
+      "mandate": "loan",
+      "authcode": "126",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 5,
+      "mandate": "loan",
+      "authcode": "123",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 6,
+      "mandate": "loan",
+      "authcode": "121",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 7,
+      "mandate": "loan",
+      "authcode": "133",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 8,
+      "mandate": "loan",
+      "authcode": "173",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 9,
+      "mandate": "loan",
+      "authcode": "123",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 10,
+      "mandate": "loan",
+      "authcode": "143",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 11,
+      "mandate": "loan",
+      "authcode": "223",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 12,
+      "mandate": "loan",
+      "authcode": "163",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 13,
+      "mandate": "loan",
+      "authcode": "183",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 11,
+      "mandate": "loan",
+      "authcode": "183",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 12,
+      "mandate": "loan",
+      "authcode": "113",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 13,
+      "mandate": "loan",
+      "authcode": "173",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+    },
+    {
+      "id": 14,
+      "mandate": "loan",
+      "authcode": "129",
+      "phone": "234 4532 123",
+      "tenure": "2",
+      "amount": 20000,
+      "interest": 15,
+      "outstanding": "5,000",
+      "repayment": 2000
+
+    }
+  ]
+}
