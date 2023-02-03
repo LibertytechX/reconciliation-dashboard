@@ -1,157 +1,129 @@
 {
-  "data": [
-    {
-      "id": 1,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 2,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 3,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 4,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Unresolved"
-    },
-    {
-      "id": 5,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Unresolved"
-    },
-    {
-      "id": 6,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 7,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 8,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Unresolved"
-    },
-    {
-      "id": 9,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 10,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 11,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Unresolved"
-    },
-    {
-      "id": 12,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 13,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 11,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Unresolved"
-    },
-    {
-      "id": 12,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Unresolved"
-    },
-    {
-      "id": 13,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    },
-    {
-      "id": 14,
-      "ramount": "20,000",
-      "Rrepayment": "2,000",
-      "status": "paid",
-      "rtenure": "2",
-      "routstanding": "5,000",
-      "verdict": "Settled"
-    }
-  ]
+  "1": {
+    "id": 1,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "2": {
+    "id": 2,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "3": {
+    "id": 3,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "4": {
+    "id": 4,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "5": {
+    "id": 5,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "6": {
+    "id": 6,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "7": {
+    "id": 7,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "8": {
+    "id": 8,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+
+  "9": {
+    "id": 9,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "10": {
+    "id": 10,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "11": {
+    "id": 11,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "12": {
+    "id": 12,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "13": {
+    "id": 13,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  },
+  "14": {
+    "id": 14,
+    "ramount": "20,000",
+    "Rrepayment": "2,000",
+    "status": "paid",
+    "rtenure": "2",
+    "routstanding": "5,000",
+    "verdict": "Settled"
+  }
 }
