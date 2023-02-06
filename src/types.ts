@@ -1,4 +1,7 @@
 export interface TableData {
+  dateOfDisbursement: any;
+  numberOfRepayments: number;
+  loanAmount: any;
   id: number;
   mandate: string;
   authcode: string;
