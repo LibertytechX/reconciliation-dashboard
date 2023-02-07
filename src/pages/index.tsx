@@ -2,7 +2,7 @@ import * as React from 'react';
 import Head from 'next/head';
 import { Inter } from '@next/font/google';
 import axios from 'axios';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid, GridFilterModel, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { RemitaDataItem, TableData } from '@/types';
 import Dayjs from 'dayjs';
@@ -38,8 +38,15 @@ export default function Home() {
 
   const [mergedData, setMergedData] = React.useState<any[] | undefined>();
 
-  const [startCalender, setStartCalender] = React.useState(null);
-  const [endCalender, setEndCalender] = React.useState(null);
+   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+     items: [
+       {
+         columnField: 'dateOfDisbursement',
+         operatorValue: '',
+         value: '',
+       },
+     ],
+   });
   
   const {
     isLoading,
@@ -77,23 +84,7 @@ export default function Home() {
     setMergedData(merged);
   };
   
-  const obtainfilterDate = async () => {
-    const { data } = await axios.post(
-      'https://libertyussd.com/api/web/loan_view/'
-    );
-    return data
-  };
-  // const obtainFilterDate = () => {
-  // setMergedData(initialLoansData?.filter(date => {
-  //     startCalender && endCalender
-  //       ? new Date(date.dateOfDisbursement) >= startCalender &&
-  //         new Date(date.dateOfDisbursement) <= endCalender
-  //       : initialLoansData || [];
-  //  }))
-  // };
-
-  
-  
+ console.log(initialLoansData)
   let sum = 0;
   initialLoansData?.forEach(total => {
     sum+=total.loanAmount
@@ -142,27 +133,7 @@ export default function Home() {
               {totalRepay}
             </button>
           </div>
-          <div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Start date"
-                value={startCalender}
-                onChange={ startValue => setStartCalender(startValue)
-                }
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="End date"
-                value={endCalender}
-                onChange={(endValue) => setEndCalender(endValue)}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-            <button >Display</button>
-          </div>
-          <button
+                <button
             className="border-2 py-2 px-5 disabled:cursor-not-allowed disabled:opacity-50 bg-orange-400 text-white text-lg 
             rounded-md shadow-sm hover:bg-orange-300 hover:shadow-lg"
             disabled={isRemitaButtonDisabled}
@@ -184,6 +155,9 @@ export default function Home() {
                 pageSize: 10,
               },
             }}
+            components={{Toolbar: GridToolbarFilterButton}}
+          filterModel={filterModel}
+        onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
           />
         </div>
       </main>
