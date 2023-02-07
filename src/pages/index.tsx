@@ -2,15 +2,13 @@ import * as React from 'react';
 import Head from 'next/head';
 import { Inter } from '@next/font/google';
 import axios from 'axios';
-import { DataGrid, GridFilterModel, GridToolbarFilterButton } from '@mui/x-data-grid';
-import { useQueries, useQuery } from '@tanstack/react-query';
-import { RemitaDataItem, TableData } from '@/types';
-import Dayjs from 'dayjs';
-import { TextField } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { endianness } from 'os';
+import {
+  DataGrid,
+  GridFilterModel,
+  GridToolbarFilterButton,
+} from '@mui/x-data-grid';
+import { useQuery } from '@tanstack/react-query';
+import { RemitaResponse, TableData } from '@/types';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -29,7 +27,11 @@ const column = [
   { field: 'Rrepayment', headerName: 'RRR No of Repayment' },
   { field: 'status', headerName: 'Status', width: 85 },
   { field: 'routstanding', headerName: 'RRR Outstanding' },
-  { field: 'last_repayment_date', headerName: 'Last Repayment Date', width: 80 },
+  {
+    field: 'last_repayment_date',
+    headerName: 'Last Repayment Date',
+    width: 80,
+  },
 ];
 
 export default function Home() {
@@ -38,16 +40,16 @@ export default function Home() {
 
   const [mergedData, setMergedData] = React.useState<any[] | undefined>();
 
-   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
-     items: [
-       {
-         columnField: 'dateOfDisbursement',
-         operatorValue: '',
-         value: '',
-       },
-     ],
-   });
-  
+  const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
+    items: [
+      {
+        columnField: 'dateOfDisbursement',
+        operatorValue: '',
+        value: '',
+      },
+    ],
+  });
+
   const {
     isLoading,
     error,
@@ -62,44 +64,61 @@ export default function Home() {
     },
   });
 
-  const getRemitaData = async (id: number | string) => {
-    const { data } = await axios.get(
-      `https://libertyussd.com/api/web/check_remita_loan_details/${id}`
+  const getRemitaData = async (
+    authCode: string,
+    mandate: string,
+    remitaCustomerId: string
+  ) => {
+    const { data } = await axios.post<RemitaResponse>(
+      `https://libertyussd.com/api/web/check_remita_loan_details/`,
+      {
+        auth_code: authCode,
+        mandate,
+        remita_customer_id: remitaCustomerId,
+      }
     );
     return data;
   };
 
   const obtainRemitaDataResults = async () => {
     const remitaApiResults = await Promise.all(
-      initialLoansData?.map((item: { id: string | number; }) => getRemitaData(item.id)) || []
+      initialLoansData?.map(
+        ({ authorisationCode, mandateReference, customerId }) =>
+          getRemitaData(authorisationCode, mandateReference, customerId)
+      ) || []
     );
 
-    const merged = initialLoansData?.map((item1: { id: any; }) => {
+    const merged = initialLoansData?.map((item1) => {
       return {
         ...item1,
-        ...remitaApiResults?.find((item2) => item2?.id === item1?.id),
+        ...remitaApiResults?.find(
+          (item2) => item2?.customerId === item1?.customerId
+        ),
       };
     });
 
     setMergedData(merged);
   };
-  
- console.log(initialLoansData)
+
+  console.log(initialLoansData);
   let sum = 0;
-  initialLoansData?.forEach(total => {
-    sum+=total.loanAmount
-  })
+  initialLoansData?.forEach((total) => {
+    sum += total.loanAmount;
+  });
   let totalAmount = sum.toLocaleString();
 
   let pay = 0;
   initialLoansData?.forEach((pays) => {
-    pay+=pays.numberOfRepayments
+    pay += pays.numberOfRepayments;
   });
   let totalRepay = pay.toLocaleString();
 
-
   if (isLoading) {
-    return <p>Loading</p>;
+    return (
+      <div className="h-screen w-screen flex items-center justify-center">
+        <p>Loading</p>
+      </div>
+    );
   }
 
   return (
@@ -133,7 +152,7 @@ export default function Home() {
               {totalRepay}
             </button>
           </div>
-                <button
+          <button
             className="border-2 py-2 px-5 disabled:cursor-not-allowed disabled:opacity-50 bg-orange-400 text-white text-lg 
             rounded-md shadow-sm hover:bg-orange-300 hover:shadow-lg"
             disabled={isRemitaButtonDisabled}
@@ -155,9 +174,11 @@ export default function Home() {
                 pageSize: 10,
               },
             }}
-            components={{Toolbar: GridToolbarFilterButton}}
-          filterModel={filterModel}
-        onFilterModelChange={(newFilterModel) => setFilterModel(newFilterModel)}
+            components={{ Toolbar: GridToolbarFilterButton }}
+            filterModel={filterModel}
+            onFilterModelChange={(newFilterModel) =>
+              setFilterModel(newFilterModel)
+            }
           />
         </div>
       </main>
