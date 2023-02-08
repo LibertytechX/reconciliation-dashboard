@@ -5,7 +5,7 @@ import axios from 'axios';
 import {
   DataGrid,
   GridFilterModel,
-  GridToolbarFilterButton,
+  GridToolbar,
 } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import { RemitaResponse, TableData } from '@/types';
@@ -19,24 +19,25 @@ const column = [
   { field: 'authorisationCode', headerName: 'Authentication Code', width: 150 },
   { field: 'phoneNumber', headerName: 'Phone', width: 130 },
   { field: 'loanAmount', headerName: 'Amount' },
-  { field: 'dateOfDisbursement', headerName: 'Date Disbursed' },
+  { field: 'dateOfDisbursement', headerName: 'Date Disbursed', width: 115 },
   { field: 'loan_interest_rate', headerName: 'Interest' },
   { field: 'outstanding_loan_bal', headerName: 'Outstanding' },
   { field: 'numberOfRepayments', headerName: 'No of Repayment' },
   { field: 'ramount', headerName: 'RRR Amount' },
-  { field: 'Rrepayment', headerName: 'RRR No of Repayment' },
+  { field: 'Rrepayment', headerName: 'RRR No of Repayment', width: 150 },
   { field: 'status', headerName: 'Status', width: 85 },
-  { field: 'routstanding', headerName: 'RRR Outstanding' },
+  { field: 'routstanding', headerName: 'RRR Outstanding', width: 150 },
   {
     field: 'last_repayment_date',
     headerName: 'Last Repayment Date',
-    width: 80,
+    width: 150,
   },
 ];
 
 export default function Home() {
   const [isRemitaButtonDisabled, setIsRemitaButtonDisabled] =
     React.useState(false);
+  const [isRemitaLoading, setIsRemitaLoading] = React.useState(false);
 
   const [mergedData, setMergedData] = React.useState<any[] | undefined>();
 
@@ -81,6 +82,8 @@ export default function Home() {
   };
 
   const obtainRemitaDataResults = async () => {
+    setIsRemitaLoading(true);
+
     const remitaApiResults = await Promise.all(
       initialLoansData?.map(
         ({ authorisationCode, mandateReference, customerId }) =>
@@ -88,19 +91,21 @@ export default function Home() {
       ) || []
     );
 
+    setIsRemitaLoading(false);
+
     const merged = initialLoansData?.map((item1) => {
       return {
         ...item1,
         ...remitaApiResults?.find(
-          (item2) => item2?.customerId === item1?.customerId
+          (item2) => item2?.remita_customer_id === item1?.customerId
         ),
       };
     });
 
     setMergedData(merged);
   };
+  console.log();
 
-  console.log(initialLoansData);
   let sum = 0;
   initialLoansData?.forEach((total) => {
     sum += total.loanAmount;
@@ -113,7 +118,7 @@ export default function Home() {
   });
   let totalRepay = pay.toLocaleString();
 
-  if (isLoading) {
+  if (isLoading || isRemitaLoading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center">
         <p>Loading</p>
@@ -169,12 +174,12 @@ export default function Home() {
           <DataGrid
             rows={mergedData || initialLoansData || []}
             columns={column}
-            initialState={{
-              pagination: {
-                pageSize: 10,
-              },
-            }}
-            components={{ Toolbar: GridToolbarFilterButton }}
+            // initialState={{
+            //   pagination: {
+            //     pageSize: 10,
+            //   },
+            // }}
+            components={{ Toolbar: GridToolbar }}
             filterModel={filterModel}
             onFilterModelChange={(newFilterModel) =>
               setFilterModel(newFilterModel)

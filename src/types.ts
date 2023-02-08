@@ -13,6 +13,8 @@ export interface TableData {
 }
 
 export interface RemitaResponse {
+  remita_customer_id: string;
+  customerId: string;
   ramount: number;
   status: string;
   Rrepayment: number;
