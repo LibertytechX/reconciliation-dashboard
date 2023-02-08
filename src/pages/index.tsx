@@ -6,6 +6,7 @@ import { DataGrid, GridFilterModel, GridToolbar } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 import { RemitaResponse, TableData } from '@/types';
 import type {} from '@mui/x-data-grid/themeAugmentation';
+import { DateRangePicker } from '@/components';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -35,8 +36,11 @@ export default function Home() {
   const [isRemitaButtonDisabled, setIsRemitaButtonDisabled] =
     React.useState(false);
   const [isRemitaLoading, setIsRemitaLoading] = React.useState(false);
-
   const [mergedData, setMergedData] = React.useState<any[] | undefined>();
+  const [dateRange, setDateRange] = React.useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
 
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [
@@ -135,14 +139,14 @@ export default function Home() {
       </Head>
 
       <div style={inter.style}>
-        <main className="h-screen w-full flex flex-col justify-center items-center">
-          <h1 className="text-6xl md:text-7xl w-[90%] font-bold text-cyan-900 my-8">
+        <main className="h-screen w-full flex flex-col text-cyan-900 justify-center items-center">
+          <h1 className="text-5xl md:text-7xl w-[90%] text-center md:text-left font-bold text-cyan-900 mt-8 md:my-8">
             Reconciliation Dashboard
           </h1>
 
           <div className="w-[90%] flex flex-row flex-wrap gap-4 justify-between items-center my-8">
-            <div className="flex gap-4 w-full md:w-max items-center">
-              <p className="bg-gray-200 px-4 flex-grow py-2.5 rounded-lg font-semibold flex items-center gap-1">
+            <div className="flex justify-center md:justify-start flex-wrap gap-4 w-full md:w-max items-center">
+              <p className="bg-gray-200 px-4 py-2.5 rounded-lg font-semibold flex items-center gap-1">
                 <span>Total Amount:</span>
 
                 <span className="py-1 px-2 rounded-md bg-cyan-600 text-white">
@@ -150,7 +154,7 @@ export default function Home() {
                 </span>
               </p>
 
-              <p className="bg-gray-200 px-4 flex-grow py-2.5 rounded-lg font-semibold flex items-center gap-1">
+              <p className="bg-gray-200 px-4 py-2.5 rounded-lg font-semibold flex items-center gap-1">
                 <span>Total Repayment:</span>
 
                 <span className="py-1 px-2 rounded-md bg-cyan-600 text-white">
@@ -159,17 +163,24 @@ export default function Home() {
               </p>
             </div>
 
-            <button
-              className="transition font-semibold w-full md:w-max ease-in-out duration-500 py-3 px-5 disabled:cursor-not-allowed disabled:opacity-50 bg-orange-600 text-white text-lg 
+            <div className="flex w-full md:w-max justify-center md:justify-start flex-wrap items-center gap-4">
+              <DateRangePicker
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+              />
+
+              <button
+                className="transition font-semibold md:w-max ease-in-out duration-500 py-3 px-5 disabled:cursor-not-allowed disabled:opacity-50 bg-orange-600 text-white text-lg 
             rounded-md hover:bg-orange-700"
-              // disabled={isRemitaButtonDisabled}
-              onClick={() => {
-                obtainRemitaDataResults();
-                setIsRemitaButtonDisabled(true);
-              }}
-            >
-              Load Remita Data
-            </button>
+                // disabled={isRemitaButtonDisabled}
+                onClick={() => {
+                  obtainRemitaDataResults();
+                  setIsRemitaButtonDisabled(true);
+                }}
+              >
+                Load Remita Data
+              </button>
+            </div>
           </div>
 
           <div className="h-[calc(100vh_-_350px)] w-[90%] flex-shrink">

@@ -1,4 +1,7 @@
 import '@/styles/globals.css';
+import '@/styles/date-picker.css';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import type { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
