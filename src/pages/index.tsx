@@ -1,17 +1,12 @@
-import axios from 'axios';
-import { format as formatDate } from 'date-fns';
 import Head from 'next/head';
 import * as React from 'react';
 
-import {
-  getRemitaData,
-  useFilteredDataSetter,
-  useInitialLoansData,
-} from '@/api';
+import { getRemitaData, useFilteredDataSetter, useInitialLoansData } from '@/api';
 import { DateRangePicker } from '@/components';
-import { TableData } from '@/types';
+import { RemitaResponse, TableData } from '@/types';
 import { DataGrid, GridFilterModel, GridToolbar } from '@mui/x-data-grid';
 import { Inter } from '@next/font/google';
+
 
 import type {} from '@mui/x-data-grid/themeAugmentation';
 const inter = Inter({ subsets: ['latin'] });
@@ -59,28 +54,35 @@ export default function Home() {
     ],
   });
 
-  const { isLoading, error, data: initialLoansData } = useInitialLoansData();
+  const { isLoading, data: initialLoansData } = useInitialLoansData();
 
   const filteredData = useFilteredDataSetter(dateRange);
 
   const obtainRemitaDataResults = async () => {
     setIsRemitaLoading(true);
 
-    const remitaApiResults = await Promise.all(
+    const remitaApiPromises =
       initialLoansData?.map(
         ({ authorisationCode, mandateReference, customerId }) =>
           getRemitaData(authorisationCode, mandateReference, customerId)
-      ) || []
-    );
+      ) || [];
+
+    const remitaApiResults = (await Promise.allSettled(remitaApiPromises)) as {
+      status: 'fulfilled' | 'rejected';
+      value: RemitaResponse;
+    }[];
 
     setIsRemitaLoading(false);
 
     const merged = initialLoansData?.map((item1) => {
+      const remitaApiResult = remitaApiResults.find(
+        ({ value }) => value?.remita_customer_id === item1?.customerId
+      );
       return {
         ...item1,
-        ...remitaApiResults?.find(
-          (item2) => item2?.remita_customer_id === item1?.customerId
-        ),
+        ...(remitaApiResult?.status === 'fulfilled'
+          ? remitaApiResult.value
+          : {}),
       };
     });
 
@@ -152,7 +154,7 @@ export default function Home() {
               <button
                 className="transition font-semibold md:w-max ease-in-out duration-500 py-3 px-5 disabled:cursor-not-allowed disabled:opacity-50 bg-orange-600 text-white text-lg 
             rounded-md hover:bg-orange-700"
-                // disabled={isRemitaButtonDisabled}
+                disabled={isRemitaButtonDisabled}
                 onClick={() => {
                   obtainRemitaDataResults();
                   setIsRemitaButtonDisabled(true);
