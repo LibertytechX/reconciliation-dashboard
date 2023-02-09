@@ -1,17 +1,37 @@
 import Head from 'next/head';
 import * as React from 'react';
 
-import { getRemitaData, useFilteredDataSetter, useInitialLoansData } from '@/api';
+import {
+  getRemitaData,
+  useFilteredDataSetter,
+  useInitialLoansData,
+} from '@/api';
 import { DateRangePicker } from '@/components';
 import { RemitaResponse, TableData } from '@/types';
-import { DataGrid, GridFilterModel, GridToolbar } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridCellParams,
+  GridFilterModel,
+  GridToolbar,
+} from '@mui/x-data-grid';
 import { Inter } from '@next/font/google';
-
 
 import type {} from '@mui/x-data-grid/themeAugmentation';
 const inter = Inter({ subsets: ['latin'] });
 
 const column = [
+  {
+    field: 'verdict',
+    headerName: 'Verdict',
+    width: 90,
+    type: 'boolean',
+    cellClassName: (params: GridCellParams<boolean>) => {
+      const { value } = params;
+      if (value === undefined) return 'bg-orange-300';
+      if (!value) return 'bg-red-300';
+      return 'bg-green-300';
+    },
+  },
   { field: 'id', headerName: 'Known ID', width: 90 },
   { field: 'customerId', headerName: 'Customer ID', width: 120 },
   { field: 'mandateReference', headerName: 'Mandate' },
@@ -86,7 +106,13 @@ export default function Home() {
       };
     });
 
-    setMergedData(merged);
+    // Add verdict to every object.
+    const updatedMerged = merged?.map((item) => {
+      const verdict = item.loanAmount === item.ramount;
+      return { ...item, verdict };
+    });
+
+    setMergedData(updatedMerged);
   };
 
   let sum = 0;
