@@ -2,6 +2,7 @@ import '@/styles/globals.css';
 import '@/styles/date-picker.css';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { ClientOnly } from '@/components';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 

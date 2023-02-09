@@ -12,6 +12,7 @@ import {
   DataGrid,
   GridCellParams,
   GridFilterModel,
+  GridRenderCellParams,
   GridToolbar,
 } from '@mui/x-data-grid';
 import { Inter } from '@next/font/google';
@@ -19,7 +20,7 @@ import { Inter } from '@next/font/google';
 import type {} from '@mui/x-data-grid/themeAugmentation';
 const inter = Inter({ subsets: ['latin'] });
 
-const column = [
+const columns = [
   {
     field: 'verdict',
     headerName: 'Verdict',
@@ -78,7 +79,7 @@ export default function Home() {
 
   const filteredData = useFilteredDataSetter(dateRange);
 
-  const obtainRemitaDataResults = async () => {
+  const obtainAllRemitaDataResults = async () => {
     setIsRemitaLoading(true);
 
     const remitaApiPromises =
@@ -92,14 +93,13 @@ export default function Home() {
       value: RemitaResponse;
     }[];
 
-    setIsRemitaLoading(false);
-
-    const merged = initialLoansData?.map((item1) => {
+    const merged = initialLoansData?.map((initialLoansItem) => {
       const remitaApiResult = remitaApiResults.find(
-        ({ value }) => value?.remita_customer_id === item1?.customerId
+        ({ value }) =>
+          value?.remita_customer_id === initialLoansItem?.customerId
       );
       return {
-        ...item1,
+        ...initialLoansItem,
         ...(remitaApiResult?.status === 'fulfilled'
           ? remitaApiResult.value
           : {}),
@@ -113,6 +113,38 @@ export default function Home() {
     });
 
     setMergedData(updatedMerged);
+    setIsRemitaLoading(false);
+  };
+
+  const obtainSingleRemitaDataResult = async (
+    authorisationCode: string,
+    mandateReference: string,
+    customerId: string
+  ) => {
+    setIsRemitaLoading(true);
+
+    const remitaApiResult = await getRemitaData(
+      authorisationCode,
+      mandateReference,
+      customerId
+    );
+
+    // The merged data (if defined) should updated instead of initial loans data
+    const currentLoanItemsState = mergedData || initialLoansData;
+
+    // update loans Data
+    const updatedLoansData = currentLoanItemsState?.map((loansItem) =>
+      loansItem.customerId === remitaApiResult?.remita_customer_id
+        ? {
+            ...loansItem,
+            ...remitaApiResult,
+            verdict: loansItem.loanAmount === remitaApiResult.ramount,
+          }
+        : loansItem
+    );
+
+    setMergedData(updatedLoansData);
+    setIsRemitaLoading(false);
   };
 
   let sum = 0;
@@ -125,6 +157,37 @@ export default function Home() {
 
   const totalAmount = sum.toLocaleString();
   const totalRepay = pay.toLocaleString();
+
+  const tableColumns = [
+    {
+      field: 'load-remita-data',
+      headerName: 'Load Remita Data',
+      width: 160,
+      renderCell: (params: GridRenderCellParams<undefined>) => {
+        const {
+          row: { authorisationCode, mandateReference, customerId },
+        } = params;
+
+        const fetchRowRemitaData = () => {
+          obtainSingleRemitaDataResult(
+            authorisationCode,
+            mandateReference,
+            customerId
+          );
+        };
+
+        return (
+          <button
+            onClick={fetchRowRemitaData}
+            className="bg-amber-200 w-max mx-auto py-1 px-3 duration-500 ease-in-out transition hover:bg-amber-300 rounded-md"
+          >
+            Load Remita Data
+          </button>
+        );
+      },
+    },
+    ...columns,
+  ];
 
   if (isLoading || isRemitaLoading) {
     return (
@@ -182,11 +245,11 @@ export default function Home() {
             rounded-md hover:bg-orange-700"
                 disabled={isRemitaButtonDisabled}
                 onClick={() => {
-                  obtainRemitaDataResults();
+                  obtainAllRemitaDataResults();
                   setIsRemitaButtonDisabled(true);
                 }}
               >
-                Load Remita Data
+                Load all Remita Data
               </button>
             </div>
           </div>
@@ -194,7 +257,7 @@ export default function Home() {
           <div className="h-[calc(100vh_-_350px)] w-[90%] flex-shrink">
             <DataGrid
               rows={mergedData || filteredData || initialLoansData || []}
-              columns={column}
+              columns={tableColumns}
               components={{ Toolbar: GridToolbar }}
               filterModel={filterModel}
               onFilterModelChange={(newFilterModel) =>
