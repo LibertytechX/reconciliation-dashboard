@@ -1,13 +1,19 @@
-import * as React from 'react';
-import Head from 'next/head';
-import { Inter } from '@next/font/google';
 import axios from 'axios';
-import { DataGrid, GridFilterModel, GridToolbar } from '@mui/x-data-grid';
-import { useQuery } from '@tanstack/react-query';
-import { RemitaResponse, TableData } from '@/types';
-import type {} from '@mui/x-data-grid/themeAugmentation';
-import { DateRangePicker } from '@/components';
+import { format as formatDate } from 'date-fns';
+import Head from 'next/head';
+import * as React from 'react';
 
+import {
+  getRemitaData,
+  useFilteredDataSetter,
+  useInitialLoansData,
+} from '@/api';
+import { DateRangePicker } from '@/components';
+import { TableData } from '@/types';
+import { DataGrid, GridFilterModel, GridToolbar } from '@mui/x-data-grid';
+import { Inter } from '@next/font/google';
+
+import type {} from '@mui/x-data-grid/themeAugmentation';
 const inter = Inter({ subsets: ['latin'] });
 
 const column = [
@@ -36,6 +42,7 @@ export default function Home() {
   const [isRemitaButtonDisabled, setIsRemitaButtonDisabled] =
     React.useState(false);
   const [isRemitaLoading, setIsRemitaLoading] = React.useState(false);
+
   const [mergedData, setMergedData] = React.useState<any[] | undefined>();
   const [dateRange, setDateRange] = React.useState<[Date | null, Date | null]>([
     null,
@@ -52,35 +59,9 @@ export default function Home() {
     ],
   });
 
-  const {
-    isLoading,
-    error,
-    data: initialLoansData,
-  } = useQuery<TableData[]>({
-    queryKey: ['Repodata'],
-    queryFn: async () => {
-      const { data } = await axios.get(
-        'https://libertyussd.com/api/web/loan_view/'
-      );
-      return data;
-    },
-  });
+  const { isLoading, error, data: initialLoansData } = useInitialLoansData();
 
-  const getRemitaData = async (
-    authCode: string,
-    mandate: string,
-    remitaCustomerId: string
-  ) => {
-    const { data } = await axios.post<RemitaResponse>(
-      `https://libertyussd.com/api/web/check_remita_loan_details/`,
-      {
-        auth_code: authCode,
-        mandate,
-        remita_customer_id: remitaCustomerId,
-      }
-    );
-    return data;
-  };
+  const filteredData = useFilteredDataSetter(dateRange);
 
   const obtainRemitaDataResults = async () => {
     setIsRemitaLoading(true);
@@ -107,16 +88,15 @@ export default function Home() {
   };
 
   let sum = 0;
+  let pay = 0;
+
   initialLoansData?.forEach((total) => {
     sum += total.loanAmount;
+    pay += total.numberOfRepayments;
   });
-  let totalAmount = sum.toLocaleString();
 
-  let pay = 0;
-  initialLoansData?.forEach((pays) => {
-    pay += pays.numberOfRepayments;
-  });
-  let totalRepay = pay.toLocaleString();
+  const totalAmount = sum.toLocaleString();
+  const totalRepay = pay.toLocaleString();
 
   if (isLoading || isRemitaLoading) {
     return (
@@ -135,7 +115,7 @@ export default function Home() {
           content="Reconciliation Dashboard for Liberty Assured"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="" />
       </Head>
 
       <div style={inter.style}>
@@ -185,13 +165,8 @@ export default function Home() {
 
           <div className="h-[calc(100vh_-_350px)] w-[90%] flex-shrink">
             <DataGrid
-              rows={mergedData || initialLoansData || []}
+              rows={mergedData || filteredData || initialLoansData || []}
               columns={column}
-              // initialState={{
-              //   pagination: {
-              //     pageSize: 10,
-              //   },
-              // }}
               components={{ Toolbar: GridToolbar }}
               filterModel={filterModel}
               onFilterModelChange={(newFilterModel) =>

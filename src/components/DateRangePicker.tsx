@@ -1,6 +1,7 @@
 import * as React from 'react';
 import DatePicker from 'react-datepicker';
 
+
 interface DateRangePickerProps {
   dateRange: [Date | null, Date | null];
   setDateRange: React.Dispatch<
@@ -20,6 +21,7 @@ export const DateRangePicker: React.FunctionComponent<DateRangePickerProps> = ({
         selectsRange={true}
         startDate={startDate}
         endDate={endDate}
+        dateFormat="dd/MM/yyyy"
         onChange={(update) => {
           setDateRange(update);
         }}
