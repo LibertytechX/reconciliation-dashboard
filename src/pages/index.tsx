@@ -2,12 +2,18 @@ import Head from 'next/head';
 import * as React from 'react';
 
 import {
-  getRemitaData,
   useFilteredDataSetter,
   useInitialLoansData,
+  useRemitaDataSetter,
 } from '@/api';
 import { DateRangePicker } from '@/components';
-import { RemitaResponse, TableData } from '@/types';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 import {
   DataGrid,
   GridCellParams,
@@ -57,14 +63,11 @@ const columns = [
 export default function Home() {
   const [isRemitaButtonDisabled, setIsRemitaButtonDisabled] =
     React.useState(false);
-  const [isRemitaLoading, setIsRemitaLoading] = React.useState(false);
-
   const [mergedData, setMergedData] = React.useState<any[] | undefined>();
   const [dateRange, setDateRange] = React.useState<[Date | null, Date | null]>([
     null,
     null,
   ]);
-
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [
       {
@@ -74,78 +77,28 @@ export default function Home() {
       },
     ],
   });
+  const [limit, setLimit] = React.useState('100');
+
+  const handleSelectChange = (event: SelectChangeEvent) => {
+    setLimit(event.target.value as string);
+  };
 
   const { isLoading, data: initialLoansData } = useInitialLoansData();
 
-  const filteredData = useFilteredDataSetter(dateRange);
+  const {
+    filteredData,
+    getAndSetFilteredData,
+    areBothDatesValid,
+    startDate,
+    endDate,
+    isFilteredDataLoading,
+  } = useFilteredDataSetter(dateRange);
 
-  const obtainAllRemitaDataResults = async () => {
-    setIsRemitaLoading(true);
-
-    const remitaApiPromises =
-      initialLoansData?.map(
-        ({ authorisationCode, mandateReference, customerId }) =>
-          getRemitaData(authorisationCode, mandateReference, customerId)
-      ) || [];
-
-    const remitaApiResults = (await Promise.allSettled(remitaApiPromises)) as {
-      status: 'fulfilled' | 'rejected';
-      value: RemitaResponse;
-    }[];
-
-    const merged = initialLoansData?.map((initialLoansItem) => {
-      const remitaApiResult = remitaApiResults.find(
-        ({ value }) =>
-          value?.remita_customer_id === initialLoansItem?.customerId
-      );
-      return {
-        ...initialLoansItem,
-        ...(remitaApiResult?.status === 'fulfilled'
-          ? remitaApiResult.value
-          : {}),
-      };
-    });
-
-    // Add verdict to every object.
-    const updatedMerged = merged?.map((item) => {
-      const verdict = item.loanAmount === item.ramount;
-      return { ...item, verdict };
-    });
-
-    setMergedData(updatedMerged);
-    setIsRemitaLoading(false);
-  };
-
-  const obtainSingleRemitaDataResult = async (
-    authorisationCode: string,
-    mandateReference: string,
-    customerId: string
-  ) => {
-    setIsRemitaLoading(true);
-
-    const remitaApiResult = await getRemitaData(
-      authorisationCode,
-      mandateReference,
-      customerId
-    );
-
-    // The merged data (if defined) should updated instead of initial loans data
-    const currentLoanItemsState = mergedData || initialLoansData;
-
-    // update loans Data
-    const updatedLoansData = currentLoanItemsState?.map((loansItem) =>
-      loansItem.customerId === remitaApiResult?.remita_customer_id
-        ? {
-            ...loansItem,
-            ...remitaApiResult,
-            verdict: loansItem.loanAmount === remitaApiResult.ramount,
-          }
-        : loansItem
-    );
-
-    setMergedData(updatedLoansData);
-    setIsRemitaLoading(false);
-  };
+  const {
+    isRemitaLoading,
+    obtainAllRemitaDataResults,
+    obtainSingleRemitaDataResult,
+  } = useRemitaDataSetter(initialLoansData, setMergedData, mergedData);
 
   let sum = 0;
   let pay = 0;
@@ -189,13 +142,18 @@ export default function Home() {
     ...columns,
   ];
 
-  if (isLoading || isRemitaLoading) {
+  if (isLoading || isRemitaLoading || isFilteredDataLoading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center">
         <p>Loading</p>
       </div>
     );
   }
+
+  const handleFilterClick = () => {
+    // Type coersion used as areBothDatesValid has done typechecks already
+    getAndSetFilteredData(startDate as string, endDate as string, limit);
+  };
 
   return (
     <>
@@ -240,8 +198,37 @@ export default function Home() {
                 setDateRange={setDateRange}
               />
 
+              <FormControl sx={{ minWidth: 80 }}>
+                <InputLabel id="demo-simple-select-label">Limit</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={limit}
+                  label="Limit"
+                  onChange={handleSelectChange}
+                  defaultValue={'100'}
+                >
+                  <MenuItem value={'100'}>100</MenuItem>
+                  <MenuItem value={'200'}>200</MenuItem>
+                  <MenuItem value={'500'}>500</MenuItem>
+                  <MenuItem value={'1000'}>1000</MenuItem>
+                  <MenuItem value={'1500'}>1500</MenuItem>
+                  <MenuItem value={'2000'}>2000</MenuItem>
+                  {/* <MenuItem value={'all'}>All</MenuItem> */}
+                </Select>
+              </FormControl>
+
               <button
-                className="transition font-semibold md:w-max ease-in-out duration-500 py-3 px-5 disabled:cursor-not-allowed disabled:opacity-50 bg-orange-600 text-white text-lg 
+                className="transition font-semibold md:w-max ease-in-out duration-500 py-4 px-5 disabled:cursor-not-allowed disabled:opacity-50 bg-cyan-600 text-white text-lg 
+            rounded-md hover:bg-cyan-700"
+                disabled={!areBothDatesValid}
+                onClick={handleFilterClick}
+              >
+                Apply filter
+              </button>
+
+              <button
+                className="transition font-semibold md:w-max ease-in-out duration-500 py-4 px-5 disabled:cursor-not-allowed disabled:opacity-50 bg-orange-600 text-white text-lg 
             rounded-md hover:bg-orange-700"
                 disabled={isRemitaButtonDisabled}
                 onClick={() => {

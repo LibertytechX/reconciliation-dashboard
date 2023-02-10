@@ -1,7 +1,6 @@
 import * as React from 'react';
 import DatePicker from 'react-datepicker';
 
-
 interface DateRangePickerProps {
   dateRange: [Date | null, Date | null];
   setDateRange: React.Dispatch<
@@ -27,6 +26,7 @@ export const DateRangePicker: React.FunctionComponent<DateRangePickerProps> = ({
         }}
         placeholderText="Select a date range"
         withPortal
+        showYearDropdown
       />
     </>
   );

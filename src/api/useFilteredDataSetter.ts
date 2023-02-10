@@ -10,37 +10,42 @@ export const useFilteredDataSetter = (
   const [filteredData, setFilteredData] = React.useState<
     TableData[] | undefined
   >();
+  const [isFilteredDataLoading, setIsFilteredDataLoading] =
+    React.useState(false);
 
-  React.useEffect(() => {
-    const formattedDates = dateRange?.map((date) =>
-      !!date ? formatDate(new Date(date), 'yyyy-MM-dd') : null
+  const formattedDates = dateRange?.map((date) =>
+    !!date ? formatDate(new Date(date), 'yyyy-MM-dd') : null
+  );
+  const areBothDatesValid = formattedDates.every((date) => !!date);
+
+  const [startDate, endDate] = formattedDates;
+
+  const getAndSetFilteredData = async (
+    startDate: string,
+    endDate: string,
+    limit = '100'
+  ) => {
+    setIsFilteredDataLoading(true);
+
+    const { data } = await axios.post<TableData[]>(
+      'https://libertyussd.com/api/web/loan_view/',
+      {
+        start_date: startDate,
+        end_date: endDate,
+        limit,
+      }
     );
-    const areBothDatesValid = formattedDates.every((date) => !!date);
 
-    if (areBothDatesValid) {
-      const [startDate, endDate] = formattedDates;
+    setFilteredData(data);
+    setIsFilteredDataLoading(false);
+  };
 
-      const getAndSetFilteredData = async (
-        startDate: string,
-        endDate: string,
-        limit = '100'
-      ) => {
-        const { data } = await axios.post<TableData[]>(
-          'https://libertyussd.com/api/web/loan_view/',
-          {
-            start_date: startDate,
-            end_date: endDate,
-            limit,
-          }
-        );
-
-        setFilteredData(data);
-      };
-
-      // Type coersion used as areBothDatesValid has done typechecks already
-      getAndSetFilteredData(startDate as string, endDate as string);
-    }
-  }, [dateRange]);
-
-  return filteredData;
+  return {
+    filteredData,
+    getAndSetFilteredData,
+    areBothDatesValid,
+    startDate,
+    endDate,
+    isFilteredDataLoading,
+  };
 };
