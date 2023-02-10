@@ -15,8 +15,8 @@
   appearance: none !important;
   transition: all 500ms ease-in-out !important;
   cursor: pointer !important;
-  padding-top: 0.9rem !important;
-  padding-bottom: 0.9rem !important;
+  padding-top: 1.1rem !important;
+  padding-bottom: 1.1rem !important;
   padding-left: 1rem !important;
   padding-right: 1rem !important;
 }
