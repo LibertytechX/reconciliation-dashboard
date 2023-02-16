@@ -1,14 +1,27 @@
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
+import {
+  DataGrid,
+  GridCellParams,
+  GridFilterModel,
+  GridRenderCellParams,
+  GridToolbar,
+} from '@mui/x-data-grid';
+import { Inter } from '@next/font/google';
 import Head from 'next/head';
 import * as React from 'react';
 
-import { useFilteredDataSetter, useInitialLoansData, useRemitaDataSetter } from '@/api';
-import { DateRangePicker } from '@/components';
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import {
-    DataGrid, GridCellParams, GridFilterModel, GridRenderCellParams, GridToolbar
-} from '@mui/x-data-grid';
-import { Inter } from '@next/font/google';
-
+  useFilteredDataSetter,
+  useInitialLoansData,
+  useRemitaDataSetter,
+} from '@/api';
+import { DateRangePicker } from '@/components';
 
 import type {} from '@mui/x-data-grid/themeAugmentation';
 const inter = Inter({ subsets: ['latin'] });
@@ -155,7 +168,7 @@ export default function Home() {
       </Head>
 
       <div style={inter.style}>
-        <main className="h-screen w-full flex flex-col text-cyan-900 justify-center items-center">
+        <main className="w-full flex flex-col text-cyan-900 justify-center items-center">
           <h1 className="text-5xl md:text-7xl w-[90%] text-center md:text-left font-bold text-cyan-900 mt-8 md:my-8 xs:mt-24">
             Reconciliation Dashboard
           </h1>
@@ -228,7 +241,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="h-[calc(100vh_-_450px)] w-[90%] flex-shrink">
+          <div className="min-h-screen h-screen mb-10 w-[90%] flex-shrink">
             <DataGrid
               rows={mergedData || filteredData || initialLoansData || []}
               columns={tableColumns}
