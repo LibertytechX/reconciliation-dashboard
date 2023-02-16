@@ -6,9 +6,8 @@ import { RemitaResponse, TableData } from '@/types';
 
 import { getRemitaData } from './getRemitaData';
 
-
 export const useRemitaDataSetter = (
-  initialLoansData: TableData[] | undefined,
+  dataToLoopOver: TableData[] | undefined,
   setMergedData: (value: React.SetStateAction<any[] | undefined>) => void,
   mergedData: any[] | undefined
 ) => {
@@ -18,7 +17,7 @@ export const useRemitaDataSetter = (
     setIsRemitaLoading(true);
 
     const remitaApiPromises =
-      initialLoansData?.map(
+      dataToLoopOver?.map(
         ({ authorisationCode, mandateReference, customerId }) =>
           getRemitaData(authorisationCode, mandateReference, customerId)
       ) || [];
@@ -28,7 +27,7 @@ export const useRemitaDataSetter = (
       value: RemitaResponse;
     }[];
 
-    const merged = initialLoansData?.map((initialLoansItem) => {
+    const merged = dataToLoopOver?.map((initialLoansItem) => {
       const remitaApiResult = remitaApiResults.find(
         ({ value }) =>
           value?.remita_customer_id === initialLoansItem?.customerId
@@ -65,7 +64,7 @@ export const useRemitaDataSetter = (
     );
 
     // The merged data (if defined) should updated instead of initial loans data
-    const currentLoanItemsState = mergedData || initialLoansData;
+    const currentLoanItemsState = mergedData || dataToLoopOver;
 
     // update loans Data
     const updatedLoansData = currentLoanItemsState?.map((loansItem) =>

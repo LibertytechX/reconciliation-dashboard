@@ -98,7 +98,11 @@ export default function Home() {
     isRemitaLoading,
     obtainAllRemitaDataResults,
     obtainSingleRemitaDataResult,
-  } = useRemitaDataSetter(initialLoansData, setMergedData, mergedData);
+  } = useRemitaDataSetter(
+    filteredData || initialLoansData,
+    setMergedData,
+    mergedData
+  );
 
   let sum = 0;
   let pay = 0;
