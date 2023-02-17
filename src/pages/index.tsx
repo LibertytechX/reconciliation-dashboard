@@ -158,7 +158,7 @@ export default function Home() {
 
       <div style={inter.style}>
         <main className="h-screen w-full flex flex-col text-cyan-900 justify-center items-center">
-          <h1 className="text-3xl md:text-7xl w-[90%] text-center md:text-left font-bold text-cyan-900 mt-8 md:my-8 xs:mt-24">
+          <h1 className="text-5xl md:text-7xl w-[90%] text-center md:text-left font-bold text-cyan-900 mt-8 md:my-8 xs:mt-24">
             Reconciliation Dashboard
           </h1>
 
@@ -182,7 +182,7 @@ export default function Home() {
             </div>
             
             <div className="flex w-full md:w-max justify-center md:justify-start flex-wrap items-center gap-4">
-            <Link className='transition md:w-max ease-in-out duration-500 border-2 bg-gray-200 font-semibold py-4 px-3 rounded-md hover:bg-gray-400' href='/mandate'>Search Mandate</Link>
+            <Link className='transition md:w-max ease-in-out duration-400 border-2 bg-gray-200 font-semibold py-4 px-3 rounded-md hover:bg-gray-400' href='/mandate'>Search Mandate</Link>
               <DateRangePicker
                 dateRange={dateRange}
                 setDateRange={setDateRange}
