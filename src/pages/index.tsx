@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import * as React from 'react';
-
+import Link from 'next/link';
 import { useFilteredDataSetter, useInitialLoansData, useRemitaDataSetter } from '@/api';
 import { DateRangePicker } from '@/components';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
@@ -28,16 +28,18 @@ const columns = [
   },
   { field: 'id', headerName: 'Known ID', width: 90 },
   { field: 'customerId', headerName: 'Customer ID', width: 120 },
-  { field: 'mandateReference', headerName: 'Mandate' },
-  { field: 'authorisationCode', headerName: 'Authentication Code', width: 150 },
+  { field: 'mandateReference', headerName: 'Mandate', width: 130 },
+  { field: 'authorisationCode', headerName: 'Authentication Code', width: 280 },
   { field: 'phoneNumber', headerName: 'Phone', width: 130 },
   { field: 'loanAmount', headerName: 'Amount' },
-  { field: 'dateOfDisbursement', headerName: 'Date Disbursed', width: 115 },
+  { field: 'dateOfDisbursement', headerName: 'Date Disbursed',
+   width: 115,
+  valueFormatter: (param: {value: string | number}) => new Date(param?.value).toLocaleDateString() },
   { field: 'loan_interest_rate', headerName: 'Interest' },
   { field: 'outstanding_loan_bal', headerName: 'Outstanding' },
-  { field: 'numberOfRepayments', headerName: 'No of Repayment' },
+  { field: 'numberOfRepayments', headerName: 'No of Repayment', width: 130 },
   { field: 'ramount', headerName: 'RRR Amount' },
-  { field: 'Rrepayment', headerName: 'RRR No of Repayment', width: 150 },
+  { field: 'Rrepayment', headerName: 'RRR No of Repayment', width: 180 },
   { field: 'status', headerName: 'Status', width: 85 },
   { field: 'routstanding', headerName: 'RRR Outstanding', width: 150 },
   {
@@ -156,7 +158,7 @@ export default function Home() {
 
       <div style={inter.style}>
         <main className="h-screen w-full flex flex-col text-cyan-900 justify-center items-center">
-          <h1 className="text-5xl md:text-7xl w-[90%] text-center md:text-left font-bold text-cyan-900 mt-8 md:my-8 xs:mt-24">
+          <h1 className="text-3xl md:text-7xl w-[90%] text-center md:text-left font-bold text-cyan-900 mt-8 md:my-8 xs:mt-24">
             Reconciliation Dashboard
           </h1>
 
@@ -178,8 +180,9 @@ export default function Home() {
                 </span>
               </p>
             </div>
-
+            
             <div className="flex w-full md:w-max justify-center md:justify-start flex-wrap items-center gap-4">
+            <Link className='transition md:w-max ease-in-out duration-500 border-2 bg-gray-200 font-semibold py-4 px-3 rounded-md hover:bg-gray-400' href='/mandate'>Search Mandate</Link>
               <DateRangePicker
                 dateRange={dateRange}
                 setDateRange={setDateRange}
@@ -219,8 +222,15 @@ export default function Home() {
             rounded-md hover:bg-orange-700"
                 disabled={isRemitaButtonDisabled}
                 onClick={() => {
-                  obtainAllRemitaDataResults();
+                  if (confirm('Are you sure you want to load Remita data?') === true
+                  ) {
+                     obtainAllRemitaDataResults();
                   setIsRemitaButtonDisabled(true);
+                    
+                  } else {
+                    null
+                  }
+                 
                 }}
               >
                 Load all Remita Data
