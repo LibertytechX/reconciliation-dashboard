@@ -10,6 +10,9 @@ export interface TableData {
   loan_interest_rate: number;
   paid_amount: number;
   dateOfDisbursement: string;
+  loan_disk_id: string;
+  loan_comment: string;
+  mandate_close: boolean;
 }
 
 export interface RemitaResponse {

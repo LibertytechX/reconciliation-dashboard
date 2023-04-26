@@ -28,10 +28,12 @@ const columns = [
   },
   { field: 'id', headerName: 'Known ID', width: 90 },
   { field: 'customerId', headerName: 'Customer ID', width: 120 },
+  { field: 'loan_disk_id', headerName: 'Loan ID', width: 80 },
   { field: 'mandateReference', headerName: 'Mandate', width: 130 },
   { field: 'authorisationCode', headerName: 'Authentication Code', width: 280 },
-  { field: 'phoneNumber', headerName: 'Phone', width: 130 },
   { field: 'loanAmount', headerName: 'Amount' },
+  { field: 'loan_comment', headerName: 'Loan Status', width: 100 },
+  { field: 'mandate_close', headerName: 'Mandate Close', width: 120 },
   { field: 'dateOfDisbursement', headerName: 'Date Disbursed',
    width: 115,
   valueFormatter: (param: {value: string | number}) => new Date(param?.value).toLocaleDateString() },
@@ -158,11 +160,11 @@ export default function Home() {
 
       <div style={inter.style}>
         <main className="h-screen w-full flex flex-col text-cyan-900 justify-center items-center">
-          <h1 className="text-5xl md:text-7xl w-[90%] text-center md:text-left font-bold text-cyan-900 mt-8 md:my-8 xs:mt-24">
+          <h1 className="text-5xl md:text-6xl w-[90%] text-center md:text-left font-bold text-cyan-900 md:mt-4 md:my-6 xs:mt-24">
             Reconciliation Dashboard
           </h1>
 
-          <div className="w-[90%] flex flex-row flex-wrap gap-4 justify-between items-center my-8">
+          <div className="w-[90%] flex flex-row flex-wrap gap-4 justify-between items-center my-8 md:my-4">
             <div className="flex justify-center md:justify-start flex-wrap gap-4 w-full md:w-max items-center">
               <p className="bg-gray-200 px-4 py-2.5 rounded-lg font-semibold flex items-center gap-1">
                 <span>Total Amount:</span>
@@ -238,7 +240,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="h-[calc(100vh_-_450px)] w-[90%] flex-shrink">
+          <div className="h-[calc(100vh_-_250px)] w-[90%] flex-shrink">
             <DataGrid
               rows={mergedData || filteredData || initialLoansData || []}
               columns={tableColumns}
