@@ -5,7 +5,8 @@ import * as React from 'react';
 import { TableData } from '@/types';
 
 export const useFilteredDataSetter = (
-  dateRange: [Date | null, Date | null]
+  dateRange: [Date | null, Date | null],
+  
 ) => {
   const [filteredData, setFilteredData] = React.useState<
     TableData[] | undefined

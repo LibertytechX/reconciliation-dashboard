@@ -2,7 +2,12 @@ import * as React from "react";
 import { useState } from "react";
 import { TableData, RemitaResponse } from "@/types";
 import axios from "axios";
-import { DataGrid, GridRenderCellParams } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridRenderCellParams,
+  GridValueFormatterParams,
+} from "@mui/x-data-grid";
 import { getRemitaData } from "@/api";
 
 export default function Mandate() {
@@ -104,7 +109,7 @@ export default function Mandate() {
     {
       field: "load_remita_data",
       headerName: "Load remita data",
-      width: 160,
+      width: 107,
       renderCell: (params: GridRenderCellParams<undefined>) => {
         const {
           row: { authorisationCode, mandateReference, customerId },
@@ -120,10 +125,10 @@ export default function Mandate() {
 
         return (
           <button
-            className="bg-amber-200 w-max mx-auto py-1 px-3 duration-500 ease-in-out transition hover:bg-amber-300 rounded-md"
+            className="bg-amber-200 w-max py-1 px-2 duration-500 ease-in-out transition hover:bg-amber-300 rounded-md"
             onClick={fetchRowRemitaData}
           >
-            Load remita data
+            Load remita
           </button>
         );
       },
@@ -131,7 +136,7 @@ export default function Mandate() {
     {
       field: "verdict",
       headerName: "Verdict",
-      width: 90,
+      width: 70,
       type: "boolean",
       cellClassName: (param: any) => {
         const { value } = param;
@@ -140,16 +145,45 @@ export default function Mandate() {
         return "bg-green-300";
       },
     },
-    { field: "id", headerName: "Known ID", width: 90 },
+    { field: "id", headerName: "Known ID", width: 80 },
     { field: "customerId", headerName: "Customer ID", width: 120 },
-    { field: "mandateReference", headerName: "Mandate", width: 130 },
+    { field: "loan_disk_id", headerName: "Loan ID", width: 80 },
+    { field: "mandateReference", headerName: "Mandate", width: 120 },
     {
       field: "authorisationCode",
       headerName: "Authentication Code",
       width: 280,
     },
-    { field: "phoneNumber", headerName: "Phone", width: 130 },
-    { field: "loanAmount", headerName: "Amount" },
+    { field: "loanAmount", headerName: "Amount", width: 70 },
+    {
+      field: "loan_comment",
+      headerName: "L.Status",
+      width: 100,
+      valueFormatter: (params: GridValueFormatterParams<string>) => {
+        const upperCase = String(params.value).toUpperCase();
+        return upperCase;
+      },
+      cellClassName: (params: GridCellParams<string>) => {
+        const { value } = params;
+        if (value === "open") return "text-[11px]";
+        if (value === "close") return "text-[11px]";
+        return "text-[11px]";
+      },
+    },
+    {
+      field: "mandate_close",
+      headerName: "M.Close",
+      width: 70,
+      cellClassName: (params: GridCellParams<boolean>) => {
+        const { value } = params;
+        if (value === true) return "text-red-700 w-max py-1 px-2 text-[11px]";
+        return "bg-white text-[11px]";
+      },
+      valueFormatter: (params: GridValueFormatterParams<string>) => {
+        const upperCase = String(params.value).toUpperCase();
+        return upperCase;
+      },
+    },
     {
       field: "dateOfDisbursement",
       headerName: "Date Disbursed",
@@ -159,11 +193,11 @@ export default function Mandate() {
     },
     { field: "loan_interest_rate", headerName: "Interest" },
     { field: "outstanding_loan_bal", headerName: "Outstanding" },
-    { field: "numberOfRepayments", headerName: "No of Repayment", width: 130 },
+    { field: "numberOfRepayments", headerName: "Repayment", width: 95 },
     { field: "ramount", headerName: "RRR Amount" },
-    { field: "Rrepayment", headerName: "RRR No of Repayment", width: 180 },
-    { field: "status", headerName: "Status", width: 85 },
-    { field: "routstanding", headerName: "RRR Outstanding", width: 150 },
+    { field: "Rrepayment", headerName: "RRR NOR", width: 80 },
+    { field: "status", headerName: "Status", width: 70 },
+    { field: "routstanding", headerName: "RRR Outstanding", width: 130 },
     {
       field: "last_repayment_date",
       headerName: "Last Repayment Date",

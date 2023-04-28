@@ -1,52 +1,97 @@
-import Head from 'next/head';
-import * as React from 'react';
-import Link from 'next/link';
-import { useFilteredDataSetter, useInitialLoansData, useRemitaDataSetter } from '@/api';
-import { DateRangePicker } from '@/components';
-import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import Head from "next/head";
+import * as React from "react";
+import Link from "next/link";
 import {
-    DataGrid, GridCellParams, GridFilterModel, GridRenderCellParams, GridToolbar
-} from '@mui/x-data-grid';
-import { Inter } from '@next/font/google';
+  useFilteredDataSetter,
+  useInitialLoansData,
+  useRemitaDataSetter,
+} from "@/api";
+import { DateRangePicker } from "@/components";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from "@mui/material";
+import {
+  DataGrid,
+  GridCellParams,
+  GridFilterModel,
+  GridRenderCellParams,
+  GridToolbar,
+  GridValueFormatterParams,
+} from "@mui/x-data-grid";
+import { Inter } from "@next/font/google";
 
-
-import type {} from '@mui/x-data-grid/themeAugmentation';
-const inter = Inter({ subsets: ['latin'] });
+import type {} from "@mui/x-data-grid/themeAugmentation";
+const inter = Inter({ subsets: ["latin"] });
 
 const columns = [
   {
-    field: 'verdict',
-    headerName: 'Verdict',
-    width: 90,
-    type: 'boolean',
+    field: "verdict",
+    headerName: "Verdict",
+    width: 70,
+    type: "boolean",
     cellClassName: (params: GridCellParams<boolean>) => {
       const { value } = params;
-      if (value === undefined) return 'bg-orange-300';
-      if (!value) return 'bg-red-300';
-      return 'bg-green-300';
+      if (value === undefined) return "bg-orange-300";
+      if (!value) return "bg-red-300";
+      return "bg-green-300";
     },
   },
-  { field: 'id', headerName: 'Known ID', width: 90 },
-  { field: 'customerId', headerName: 'Customer ID', width: 120 },
-  { field: 'loan_disk_id', headerName: 'Loan ID', width: 80 },
-  { field: 'mandateReference', headerName: 'Mandate', width: 130 },
-  { field: 'authorisationCode', headerName: 'Authentication Code', width: 280 },
-  { field: 'loanAmount', headerName: 'Amount' },
-  { field: 'loan_comment', headerName: 'Loan Status', width: 100 },
-  { field: 'mandate_close', headerName: 'Mandate Close', width: 120 },
-  { field: 'dateOfDisbursement', headerName: 'Date Disbursed',
-   width: 115,
-  valueFormatter: (param: {value: string | number}) => new Date(param?.value).toLocaleDateString() },
-  { field: 'loan_interest_rate', headerName: 'Interest' },
-  { field: 'outstanding_loan_bal', headerName: 'Outstanding' },
-  { field: 'numberOfRepayments', headerName: 'No of Repayment', width: 130 },
-  { field: 'ramount', headerName: 'RRR Amount' },
-  { field: 'Rrepayment', headerName: 'RRR No of Repayment', width: 180 },
-  { field: 'status', headerName: 'Status', width: 85 },
-  { field: 'routstanding', headerName: 'RRR Outstanding', width: 150 },
+  { field: "id", headerName: "Known ID", width: 80 },
+  { field: "customerId", headerName: "Customer ID", width: 120 },
+  { field: "loan_disk_id", headerName: "Loan ID", width: 80 },
+  { field: "mandateReference", headerName: "Mandate", width: 120 },
+  { field: "authorisationCode", headerName: "Authentication Code", width: 280 },
+  { field: "loanAmount", headerName: "Amount", width: 70 },
   {
-    field: 'last_repayment_date',
-    headerName: 'Last Repayment Date',
+    field: "loan_comment",
+    headerName: "L.Status",
+    width: 100,
+    valueFormatter: (params: GridValueFormatterParams<string>) => {
+      const upperCase = String(params.value).toUpperCase();
+      return upperCase;
+    },
+    cellClassName: (params: GridCellParams<string>) => {
+      const { value } = params;
+      if (value === "open") return "text-[11px]";
+      if (value === "close") return "text-[11px]";
+      return "text-[11px]";
+    },
+  },
+  {
+    field: "mandate_close",
+    headerName: "M.Close",
+    width: 70,
+    cellClassName: (params: GridCellParams<boolean>) => {
+      const { value } = params;
+      if (value === true) return "text-red-700 w-max py-1 px-2 text-[11px]";
+      return "bg-white text-[11px]";
+    },
+    valueFormatter: (params: GridValueFormatterParams<string>) => {
+      const upperCase = String(params.value).toUpperCase();
+      return upperCase;
+    },
+  },
+  {
+    field: "dateOfDisbursement",
+    headerName: "Date Disbursed",
+    width: 115,
+    valueFormatter: (param: { value: string | number }) =>
+      new Date(param?.value).toLocaleDateString(),
+  },
+  { field: "loan_interest_rate", headerName: "Interest", width: 70 },
+  { field: "outstanding_loan_bal", headerName: "Outstanding" },
+  { field: "numberOfRepayments", headerName: "Repayment", width: 95 },
+  { field: "ramount", headerName: "RRR Amount" },
+  { field: "Rrepayment", headerName: "RRR NOR", width: 80 },
+  { field: "status", headerName: "Status", width: 70 },
+  { field: "routstanding", headerName: "RRR Outstanding", width: 130 },
+  {
+    field: "last_repayment_date",
+    headerName: "Last Repayment Date",
     width: 150,
   },
 ];
@@ -62,13 +107,13 @@ export default function Home() {
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [
       {
-        columnField: 'dateOfDisbursement',
-        operatorValue: '',
-        value: '',
+        columnField: "dateOfDisbursement",
+        operatorValue: "",
+        value: "",
       },
     ],
   });
-  const [limit, setLimit] = React.useState('100');
+  const [limit, setLimit] = React.useState("100");
 
   const handleSelectChange = (event: SelectChangeEvent) => {
     setLimit(event.target.value as string);
@@ -91,10 +136,23 @@ export default function Home() {
     obtainSingleRemitaDataResult,
   } = useRemitaDataSetter(initialLoansData, setMergedData, mergedData);
 
+  const [dataForSum, setDataForSum] = React.useState(initialLoansData);
+
+  React.useEffect(() => {
+    if (filteredData) {
+      console.log("true");
+      setDataForSum(filteredData);
+    } else {
+      setDataForSum(initialLoansData);
+    }
+  }, [filteredData, initialLoansData]);
+
+  // console.log({ dataForSum, initialLoansData, filteredData });
+
   let sum = 0;
   let pay = 0;
 
-  initialLoansData?.forEach((total) => {
+  dataForSum?.forEach((total) => {
     sum += total.loanAmount;
     pay += total.numberOfRepayments;
   });
@@ -102,11 +160,16 @@ export default function Home() {
   const totalAmount = sum.toLocaleString();
   const totalRepay = pay.toLocaleString();
 
+  const handleFilterClick = () => {
+    // Type coersion used as areBothDatesValid has done typechecks already
+    getAndSetFilteredData(startDate as string, endDate as string, limit);
+  };
+
   const tableColumns = [
     {
-      field: 'load-remita-data',
-      headerName: 'Load Remita Data',
-      width: 160,
+      field: "load-remita-data",
+      headerName: "Load Remita",
+      width: 107,
       renderCell: (params: GridRenderCellParams<undefined>) => {
         const {
           row: { authorisationCode, mandateReference, customerId },
@@ -123,9 +186,9 @@ export default function Home() {
         return (
           <button
             onClick={fetchRowRemitaData}
-            className="bg-amber-200 w-max mx-auto py-1 px-3 duration-500 ease-in-out transition hover:bg-amber-300 rounded-md"
+            className="bg-amber-200 w-max py-1 px-2 duration-500 ease-in-out transition hover:bg-amber-300 rounded-md"
           >
-            Load Remita Data
+            Load Remita
           </button>
         );
       },
@@ -140,11 +203,6 @@ export default function Home() {
       </div>
     );
   }
-
-  const handleFilterClick = () => {
-    // Type coersion used as areBothDatesValid has done typechecks already
-    getAndSetFilteredData(startDate as string, endDate as string, limit);
-  };
 
   return (
     <>
@@ -182,9 +240,14 @@ export default function Home() {
                 </span>
               </p>
             </div>
-            
+
             <div className="flex w-full md:w-max justify-center md:justify-start flex-wrap items-center gap-4">
-            <Link className='transition md:w-max ease-in-out duration-400 border-2 bg-gray-200 font-semibold py-4 px-3 rounded-md hover:bg-gray-400' href='/mandate'>Search Mandate</Link>
+              <Link
+                className="transition md:w-max ease-in-out duration-400 border-2 bg-gray-200 font-semibold py-4 px-3 rounded-md hover:bg-gray-400"
+                href="/mandate"
+              >
+                Search Mandate
+              </Link>
               <DateRangePicker
                 dateRange={dateRange}
                 setDateRange={setDateRange}
@@ -198,14 +261,14 @@ export default function Home() {
                   value={limit}
                   label="Limit"
                   onChange={handleSelectChange}
-                  defaultValue={'100'}
+                  defaultValue={"100"}
                 >
-                  <MenuItem value={'100'}>100</MenuItem>
-                  <MenuItem value={'200'}>200</MenuItem>
-                  <MenuItem value={'500'}>500</MenuItem>
-                  <MenuItem value={'1000'}>1000</MenuItem>
-                  <MenuItem value={'1500'}>1500</MenuItem>
-                  <MenuItem value={'2000'}>2000</MenuItem>
+                  <MenuItem value={"100"}>100</MenuItem>
+                  <MenuItem value={"200"}>200</MenuItem>
+                  <MenuItem value={"500"}>500</MenuItem>
+                  <MenuItem value={"1000"}>1000</MenuItem>
+                  <MenuItem value={"1500"}>1500</MenuItem>
+                  <MenuItem value={"2000"}>2000</MenuItem>
                   {/* <MenuItem value={'all'}>All</MenuItem> */}
                 </Select>
               </FormControl>
@@ -224,15 +287,15 @@ export default function Home() {
             rounded-md hover:bg-orange-700"
                 disabled={isRemitaButtonDisabled}
                 onClick={() => {
-                  if (confirm('Are you sure you want to load Remita data?') === true
+                  if (
+                    confirm("Are you sure you want to load Remita data?") ===
+                    true
                   ) {
-                     obtainAllRemitaDataResults();
-                  setIsRemitaButtonDisabled(true);
-                    
+                    obtainAllRemitaDataResults();
+                    setIsRemitaButtonDisabled(true);
                   } else {
-                    null
+                    null;
                   }
-                 
                 }}
               >
                 Load all Remita Data
