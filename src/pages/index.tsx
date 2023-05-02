@@ -45,7 +45,15 @@ const columns = [
   { field: "loan_disk_id", headerName: "Loan ID", width: 80 },
   { field: "mandateReference", headerName: "Mandate", width: 120 },
   { field: "authorisationCode", headerName: "Authentication Code", width: 280 },
-  { field: "loanAmount", headerName: "Amount", width: 70 },
+  {
+    field: "loanAmount",
+    headerName: "Amount",
+    width: 70,
+    valueFormatter: (params: GridValueFormatterParams<number>) => {
+      const commasToNumber = Number(params.value).toLocaleString();
+      return commasToNumber;
+    },
+  },
   {
     field: "loan_comment",
     headerName: "L.Status",
@@ -85,7 +93,11 @@ const columns = [
   { field: "loan_interest_rate", headerName: "Interest", width: 70 },
   { field: "outstanding_loan_bal", headerName: "Outstanding" },
   { field: "numberOfRepayments", headerName: "Repayment", width: 95 },
-  { field: "ramount", headerName: "RRR Amount" },
+  {
+    field: "ramount",
+    headerName: "RRR Amount",
+    
+  },
   { field: "Rrepayment", headerName: "RRR NOR", width: 80 },
   { field: "status", headerName: "Status", width: 70 },
   { field: "routstanding", headerName: "RRR Outstanding", width: 130 },
@@ -130,17 +142,10 @@ export default function Home() {
     isFilteredDataLoading,
   } = useFilteredDataSetter(dateRange);
 
-  const {
-    isRemitaLoading,
-    obtainAllRemitaDataResults,
-    obtainSingleRemitaDataResult,
-  } = useRemitaDataSetter(initialLoansData, setMergedData, mergedData);
-
   const [dataForSum, setDataForSum] = React.useState(initialLoansData);
 
   React.useEffect(() => {
     if (filteredData) {
-      console.log("true");
       setDataForSum(filteredData);
     } else {
       setDataForSum(initialLoansData);
@@ -164,6 +169,12 @@ export default function Home() {
     // Type coersion used as areBothDatesValid has done typechecks already
     getAndSetFilteredData(startDate as string, endDate as string, limit);
   };
+
+  const {
+    isRemitaLoading,
+    obtainAllRemitaDataResults,
+    obtainSingleRemitaDataResult,
+  } = useRemitaDataSetter(dataForSum, setMergedData, mergedData);
 
   const tableColumns = [
     {

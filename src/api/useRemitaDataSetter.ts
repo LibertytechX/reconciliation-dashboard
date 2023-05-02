@@ -81,6 +81,7 @@ export const useRemitaDataSetter = (
     setIsRemitaLoading(false);
   };
 
+
   return {
     isRemitaLoading,
     obtainAllRemitaDataResults,
