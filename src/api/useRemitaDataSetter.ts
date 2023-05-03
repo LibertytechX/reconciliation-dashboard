@@ -55,7 +55,7 @@ export const useRemitaDataSetter = (
     mandateReference: string,
     customerId: string
   ) => {
-    setIsRemitaLoading(true);
+    // setIsRemitaLoading(true);
 
     const remitaApiResult = await getRemitaData(
       authorisationCode,

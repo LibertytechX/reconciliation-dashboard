@@ -190,6 +190,7 @@ export default function Home() {
         } = params;
 
         const fetchRowRemitaData = () => {
+          setTableDataStatus('merged');
           obtainSingleRemitaDataResult(
             authorisationCode,
             mandateReference,
