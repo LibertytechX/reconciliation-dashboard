@@ -1,19 +1,19 @@
-import Head from "next/head";
-import * as React from "react";
-import Link from "next/link";
+import Head from 'next/head';
+import * as React from 'react';
+import Link from 'next/link';
 import {
   useFilteredDataSetter,
   useInitialLoansData,
   useRemitaDataSetter,
-} from "@/api";
-import { DateRangePicker } from "@/components";
+} from '@/api';
+import { DateRangePicker } from '@/components';
 import {
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
-} from "@mui/material";
+} from '@mui/material';
 import {
   DataGrid,
   GridCellParams,
@@ -21,33 +21,33 @@ import {
   GridRenderCellParams,
   GridToolbar,
   GridValueFormatterParams,
-} from "@mui/x-data-grid";
-import { Inter } from "@next/font/google";
+} from '@mui/x-data-grid';
+import { Inter } from '@next/font/google';
 
-import type {} from "@mui/x-data-grid/themeAugmentation";
-const inter = Inter({ subsets: ["latin"] });
+import type {} from '@mui/x-data-grid/themeAugmentation';
+const inter = Inter({ subsets: ['latin'] });
 
 const columns = [
   {
-    field: "verdict",
-    headerName: "Verdict",
+    field: 'verdict',
+    headerName: 'Verdict',
     width: 70,
-    type: "boolean",
+    type: 'boolean',
     cellClassName: (params: GridCellParams<boolean>) => {
       const { value } = params;
-      if (value === undefined) return "bg-orange-300";
-      if (!value) return "bg-red-300";
-      return "bg-green-300";
+      if (value === undefined) return 'bg-orange-300';
+      if (!value) return 'bg-red-300';
+      return 'bg-green-300';
     },
   },
-  { field: "id", headerName: "Known ID", width: 80 },
-  { field: "customerId", headerName: "Customer ID", width: 120 },
-  { field: "loan_disk_id", headerName: "Loan ID", width: 80 },
-  { field: "mandateReference", headerName: "Mandate", width: 120 },
-  { field: "authorisationCode", headerName: "Authentication Code", width: 280 },
+  { field: 'id', headerName: 'Known ID', width: 80 },
+  { field: 'customerId', headerName: 'Customer ID', width: 120 },
+  { field: 'loan_disk_id', headerName: 'Loan ID', width: 80 },
+  { field: 'mandateReference', headerName: 'Mandate', width: 120 },
+  { field: 'authorisationCode', headerName: 'Authentication Code', width: 280 },
   {
-    field: "loanAmount",
-    headerName: "Amount",
+    field: 'loanAmount',
+    headerName: 'Amount',
     width: 70,
     valueFormatter: (params: GridValueFormatterParams<number>) => {
       const commasToNumber = Number(params.value).toLocaleString();
@@ -55,8 +55,8 @@ const columns = [
     },
   },
   {
-    field: "loan_comment",
-    headerName: "L.Status",
+    field: 'loan_comment',
+    headerName: 'L.Status',
     width: 100,
     valueFormatter: (params: GridValueFormatterParams<string>) => {
       const upperCase = String(params.value).toUpperCase();
@@ -64,19 +64,19 @@ const columns = [
     },
     cellClassName: (params: GridCellParams<string>) => {
       const { value } = params;
-      if (value === "open") return "text-[11px]";
-      if (value === "close") return "text-[11px]";
-      return "text-[11px]";
+      if (value === 'open') return 'text-[11px]';
+      if (value === 'close') return 'text-[11px]';
+      return 'text-[11px]';
     },
   },
   {
-    field: "mandate_close",
-    headerName: "M.Close",
+    field: 'mandate_close',
+    headerName: 'M.Close',
     width: 70,
     cellClassName: (params: GridCellParams<boolean>) => {
       const { value } = params;
-      if (value === true) return "text-red-700 w-max py-1 px-2 text-[11px]";
-      return "bg-white text-[11px]";
+      if (value === true) return 'text-red-700 w-max py-1 px-2 text-[11px]';
+      return 'bg-white text-[11px]';
     },
     valueFormatter: (params: GridValueFormatterParams<string>) => {
       const upperCase = String(params.value).toUpperCase();
@@ -84,29 +84,30 @@ const columns = [
     },
   },
   {
-    field: "dateOfDisbursement",
-    headerName: "Date Disbursed",
+    field: 'dateOfDisbursement',
+    headerName: 'Date Disbursed',
     width: 115,
     valueFormatter: (param: { value: string | number }) =>
       new Date(param?.value).toLocaleDateString(),
   },
-  { field: "loan_interest_rate", headerName: "Interest", width: 70 },
-  { field: "outstanding_loan_bal", headerName: "Outstanding" },
-  { field: "numberOfRepayments", headerName: "Repayment", width: 95 },
+  { field: 'loan_interest_rate', headerName: 'Interest', width: 70 },
+  { field: 'outstanding_loan_bal', headerName: 'Outstanding' },
+  { field: 'numberOfRepayments', headerName: 'Repayment', width: 95 },
   {
-    field: "ramount",
-    headerName: "RRR Amount",
-    
+    field: 'ramount',
+    headerName: 'RRR Amount',
   },
-  { field: "Rrepayment", headerName: "RRR NOR", width: 80 },
-  { field: "status", headerName: "Status", width: 70 },
-  { field: "routstanding", headerName: "RRR Outstanding", width: 130 },
+  { field: 'Rrepayment', headerName: 'RRR NOR', width: 80 },
+  { field: 'status', headerName: 'Status', width: 70 },
+  { field: 'routstanding', headerName: 'RRR Outstanding', width: 130 },
   {
-    field: "last_repayment_date",
-    headerName: "Last Repayment Date",
+    field: 'last_repayment_date',
+    headerName: 'Last Repayment Date',
     width: 150,
   },
 ];
+
+type TableDataStatus = '' | 'merged' | 'filtered';
 
 export default function Home() {
   const [isRemitaButtonDisabled, setIsRemitaButtonDisabled] =
@@ -119,17 +120,13 @@ export default function Home() {
   const [filterModel, setFilterModel] = React.useState<GridFilterModel>({
     items: [
       {
-        columnField: "dateOfDisbursement",
-        operatorValue: "",
-        value: "",
+        columnField: 'dateOfDisbursement',
+        operatorValue: '',
+        value: '',
       },
     ],
   });
-  const [limit, setLimit] = React.useState("100");
-
-  const handleSelectChange = (event: SelectChangeEvent) => {
-    setLimit(event.target.value as string);
-  };
+  const [limit, setLimit] = React.useState('100');
 
   const { isLoading, data: initialLoansData } = useInitialLoansData();
 
@@ -152,7 +149,12 @@ export default function Home() {
     }
   }, [filteredData, initialLoansData]);
 
-  // console.log({ dataForSum, initialLoansData, filteredData });
+  const [tableDataStatus, setTableDataStatus] =
+    React.useState<TableDataStatus>('');
+
+  const handleSelectChange = (event: SelectChangeEvent) => {
+    setLimit(event.target.value as string);
+  };
 
   let sum = 0;
   let pay = 0;
@@ -168,6 +170,7 @@ export default function Home() {
   const handleFilterClick = () => {
     // Type coersion used as areBothDatesValid has done typechecks already
     getAndSetFilteredData(startDate as string, endDate as string, limit);
+    setTableDataStatus('filtered');
   };
 
   const {
@@ -178,8 +181,8 @@ export default function Home() {
 
   const tableColumns = [
     {
-      field: "load-remita-data",
-      headerName: "Load Remita",
+      field: 'load-remita-data',
+      headerName: 'Load Remita',
       width: 107,
       renderCell: (params: GridRenderCellParams<undefined>) => {
         const {
@@ -214,6 +217,18 @@ export default function Home() {
       </div>
     );
   }
+
+  const getTableData = (tableDataStatus: TableDataStatus) => {
+    if (tableDataStatus === 'filtered') {
+      return filteredData;
+    } else if (tableDataStatus === 'merged') {
+      return mergedData;
+    } else {
+      return initialLoansData;
+    }
+  };
+
+  const dataForTable = getTableData(tableDataStatus);
 
   return (
     <>
@@ -272,14 +287,14 @@ export default function Home() {
                   value={limit}
                   label="Limit"
                   onChange={handleSelectChange}
-                  defaultValue={"100"}
+                  defaultValue={'100'}
                 >
-                  <MenuItem value={"100"}>100</MenuItem>
-                  <MenuItem value={"200"}>200</MenuItem>
-                  <MenuItem value={"500"}>500</MenuItem>
-                  <MenuItem value={"1000"}>1000</MenuItem>
-                  <MenuItem value={"1500"}>1500</MenuItem>
-                  <MenuItem value={"2000"}>2000</MenuItem>
+                  <MenuItem value={'100'}>100</MenuItem>
+                  <MenuItem value={'200'}>200</MenuItem>
+                  <MenuItem value={'500'}>500</MenuItem>
+                  <MenuItem value={'1000'}>1000</MenuItem>
+                  <MenuItem value={'1500'}>1500</MenuItem>
+                  <MenuItem value={'2000'}>2000</MenuItem>
                   {/* <MenuItem value={'all'}>All</MenuItem> */}
                 </Select>
               </FormControl>
@@ -299,11 +314,12 @@ export default function Home() {
                 disabled={isRemitaButtonDisabled}
                 onClick={() => {
                   if (
-                    confirm("Are you sure you want to load Remita data?") ===
+                    confirm('Are you sure you want to load Remita data?') ===
                     true
                   ) {
                     obtainAllRemitaDataResults();
                     setIsRemitaButtonDisabled(true);
+                    setTableDataStatus('merged');
                   } else {
                     null;
                   }
@@ -316,7 +332,7 @@ export default function Home() {
 
           <div className="h-[calc(100vh_-_250px)] w-[90%] flex-shrink">
             <DataGrid
-              rows={mergedData || filteredData || initialLoansData || []}
+              rows={dataForTable || []}
               columns={tableColumns}
               components={{ Toolbar: GridToolbar }}
               filterModel={filterModel}
