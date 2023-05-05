@@ -337,6 +337,7 @@ export default function Home() {
               columns={tableColumns}
               components={{ Toolbar: GridToolbar }}
               filterModel={filterModel}
+              disableSelectionOnClick
               onFilterModelChange={(newFilterModel) =>
                 setFilterModel(newFilterModel)
               }
